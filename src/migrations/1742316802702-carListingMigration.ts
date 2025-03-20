@@ -1,0 +1,128 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class CarListingMigration1742316802702 implements MigrationInterface {
+    name = 'CarListingMigration1742316802702'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "showroom_details" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "original_price" numeric(12,2), "engine_type" character varying(100), "engine_capacity" character varying(50), "transmission" character varying(50), "assembly" character varying(100), "fuel_type" character varying(50), "body_type" character varying(50), "seating_capacity" integer, "fuel_tank_capacity" character varying(50), "top_speed" character varying(50), "acceleration" character varying(50), "horsepower" character varying(50), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "modelId" uuid NOT NULL, "makeId" uuid NOT NULL, "yearId" uuid NOT NULL, CONSTRAINT "PK_42874a9e4cf85760122f5943de8" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "car_variants" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "description" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "modelId" uuid NOT NULL, "makeId" uuid NOT NULL, "yearId" uuid NOT NULL, CONSTRAINT "PK_0bba1bd30f1485cb1174a38d379" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_e5c0e044635843a4e9f64237f1" ON "car_variants" ("yearId", "name") `);
+        await queryRunner.query(`CREATE TABLE "car_years" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "year" integer NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "modelId" uuid NOT NULL, "makeId" uuid NOT NULL, CONSTRAINT "PK_023ad415941e3a98f1eb9d0483d" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_c2d439621e2f204677ea9dcbb6" ON "car_years" ("modelId", "year") `);
+        await queryRunner.query(`CREATE TABLE "car_models" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "image_url" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "makeId" uuid NOT NULL, CONSTRAINT "PK_ee4355345e0e1c18cb6efa2bd5c" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_5f78622238b307ad0acfcaefc2" ON "car_models" ("makeId", "name") `);
+        await queryRunner.query(`CREATE TABLE "car_makes" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "image_url" text, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_03e3bbc223f0c5809fe385f846b" UNIQUE ("name"), CONSTRAINT "PK_dc5d7e34799a27e68f5fdc7f910" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "registration_cities" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_12e7e6824e26a3e88df5a09a8f6" UNIQUE ("name"), CONSTRAINT "PK_044bcc6fc80fc6d357aef60179d" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "car_additional_details" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "engine_type" character varying(100), "engine_capacity" character varying(50), "transmission" character varying(50), "assembly" character varying(50), "fuel_type" character varying(50), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_bb31b8e69be4cae061c09530d78" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "car_general_details" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "description" text, "reason_for_selling" text, "ownership_status" character varying(50), "accident_history" boolean NOT NULL DEFAULT false, "registration_year" integer, "registration_number" character varying(50), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_4ca4bba12ae9c62337e91d6b649" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "available_features" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(100) NOT NULL, "is_active" boolean NOT NULL DEFAULT true, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_b6bcbe918d107820b82e74bff0e" UNIQUE ("name"), CONSTRAINT "PK_85e1a021a214c62e8b42e73b7d2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "car_listing_features" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "listingId" uuid NOT NULL, "featureId" uuid NOT NULL, CONSTRAINT "PK_34851442977a241fab3844a6fd4" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "IDX_e2ba47d52054e3f1714ce1d822" ON "car_listing_features" ("listingId", "featureId") `);
+        await queryRunner.query(`CREATE TABLE "car_listing_images" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "image_url" text NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "listingId" uuid NOT NULL, CONSTRAINT "PK_21f2a46027abc3ba1bd5d9a2628" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_1d215ade387a08e1d6d4ffe15d" ON "car_listing_images" ("listingId") `);
+        await queryRunner.query(`CREATE TYPE "public"."car_listings_status_enum" AS ENUM('draft', 'pending', 'active', 'sold', 'inactive', 'rejected')`);
+        await queryRunner.query(`CREATE TABLE "car_listings" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "status" "public"."car_listings_status_enum" NOT NULL DEFAULT 'draft', "meter_reading" integer NOT NULL, "price" numeric(12,2) NOT NULL, "color" character varying(50) NOT NULL, "location" character varying(255) NOT NULL, "listing_date" TIMESTAMP NOT NULL DEFAULT now(), "featured_until" TIMESTAMP, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, "variantId" uuid NOT NULL, "makeId" uuid NOT NULL, "modelId" uuid NOT NULL, "yearId" uuid NOT NULL, "registrationCityId" uuid NOT NULL, CONSTRAINT "PK_9b5a60cd833afe6526b8e261616" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "createdAt"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "updatedAt"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "passwordHash"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "firstName"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "lastName"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "phoneNumber"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "profilePictureUrl"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "isVerified"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "lastLogin"`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "password_hash" character varying(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "first_name" character varying(100)`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "last_name" character varying(100)`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "phone_number" character varying(20)`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "profile_picture_url" text`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "is_verified" boolean NOT NULL DEFAULT false`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "last_login" TIMESTAMP`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "created_at" TIMESTAMP NOT NULL DEFAULT now()`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "updated_at" TIMESTAMP NOT NULL DEFAULT now()`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "email"`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" ADD CONSTRAINT "FK_5aff4832a05f43e2ac419549b22" FOREIGN KEY ("modelId") REFERENCES "car_models"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" ADD CONSTRAINT "FK_133a2c06cf107a5c192f8b3506c" FOREIGN KEY ("makeId") REFERENCES "car_makes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" ADD CONSTRAINT "FK_2879dc8591a6710d79ea371200d" FOREIGN KEY ("yearId") REFERENCES "car_years"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_variants" ADD CONSTRAINT "FK_b6a52708e726db3c2c4b69c7de5" FOREIGN KEY ("modelId") REFERENCES "car_models"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_variants" ADD CONSTRAINT "FK_bd5adebdaec74f82771e16f5deb" FOREIGN KEY ("makeId") REFERENCES "car_makes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_variants" ADD CONSTRAINT "FK_2330cf3a640be1f80bcbf8616d8" FOREIGN KEY ("yearId") REFERENCES "car_years"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_years" ADD CONSTRAINT "FK_b056d374f184e92d3285f5cff63" FOREIGN KEY ("modelId") REFERENCES "car_models"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_years" ADD CONSTRAINT "FK_31c51408b92643de95f6c1ad59a" FOREIGN KEY ("makeId") REFERENCES "car_makes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_models" ADD CONSTRAINT "FK_ff72b51a51d29375803946367fb" FOREIGN KEY ("makeId") REFERENCES "car_makes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listing_features" ADD CONSTRAINT "FK_3101a0eb291fd180eddcfb3c62c" FOREIGN KEY ("listingId") REFERENCES "car_listings"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listing_features" ADD CONSTRAINT "FK_cc9b6756dddebcfb08e4e6da5d1" FOREIGN KEY ("featureId") REFERENCES "available_features"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listing_images" ADD CONSTRAINT "FK_1d215ade387a08e1d6d4ffe15da" FOREIGN KEY ("listingId") REFERENCES "car_listings"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_b39c86a18ed8c61e9d589b93767" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_63762118b10652c6a02ff50096d" FOREIGN KEY ("variantId") REFERENCES "car_variants"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_35583cb7a6a02afc1e341514fdc" FOREIGN KEY ("makeId") REFERENCES "car_makes"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_9574e2bdce7a704f44ee896b838" FOREIGN KEY ("modelId") REFERENCES "car_models"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_25a4f244613943cc2ff4aabc4a4" FOREIGN KEY ("yearId") REFERENCES "car_years"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "car_listings" ADD CONSTRAINT "FK_314233123204c0b9439048ac82c" FOREIGN KEY ("registrationCityId") REFERENCES "registration_cities"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_314233123204c0b9439048ac82c"`);
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_25a4f244613943cc2ff4aabc4a4"`);
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_9574e2bdce7a704f44ee896b838"`);
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_35583cb7a6a02afc1e341514fdc"`);
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_63762118b10652c6a02ff50096d"`);
+        await queryRunner.query(`ALTER TABLE "car_listings" DROP CONSTRAINT "FK_b39c86a18ed8c61e9d589b93767"`);
+        await queryRunner.query(`ALTER TABLE "car_listing_images" DROP CONSTRAINT "FK_1d215ade387a08e1d6d4ffe15da"`);
+        await queryRunner.query(`ALTER TABLE "car_listing_features" DROP CONSTRAINT "FK_cc9b6756dddebcfb08e4e6da5d1"`);
+        await queryRunner.query(`ALTER TABLE "car_listing_features" DROP CONSTRAINT "FK_3101a0eb291fd180eddcfb3c62c"`);
+        await queryRunner.query(`ALTER TABLE "car_models" DROP CONSTRAINT "FK_ff72b51a51d29375803946367fb"`);
+        await queryRunner.query(`ALTER TABLE "car_years" DROP CONSTRAINT "FK_31c51408b92643de95f6c1ad59a"`);
+        await queryRunner.query(`ALTER TABLE "car_years" DROP CONSTRAINT "FK_b056d374f184e92d3285f5cff63"`);
+        await queryRunner.query(`ALTER TABLE "car_variants" DROP CONSTRAINT "FK_2330cf3a640be1f80bcbf8616d8"`);
+        await queryRunner.query(`ALTER TABLE "car_variants" DROP CONSTRAINT "FK_bd5adebdaec74f82771e16f5deb"`);
+        await queryRunner.query(`ALTER TABLE "car_variants" DROP CONSTRAINT "FK_b6a52708e726db3c2c4b69c7de5"`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" DROP CONSTRAINT "FK_2879dc8591a6710d79ea371200d"`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" DROP CONSTRAINT "FK_133a2c06cf107a5c192f8b3506c"`);
+        await queryRunner.query(`ALTER TABLE "showroom_details" DROP CONSTRAINT "FK_5aff4832a05f43e2ac419549b22"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "email"`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "email" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email")`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "updated_at"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "created_at"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "last_login"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "is_verified"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "profile_picture_url"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "phone_number"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "last_name"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "first_name"`);
+        await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "password_hash"`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "lastLogin" TIMESTAMP`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "isVerified" boolean NOT NULL DEFAULT false`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "profilePictureUrl" text`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "phoneNumber" character varying(20)`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "lastName" character varying(100)`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "firstName" character varying(100) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "passwordHash" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "updatedAt" TIMESTAMP NOT NULL DEFAULT now()`);
+        await queryRunner.query(`ALTER TABLE "users" ADD "createdAt" TIMESTAMP NOT NULL DEFAULT now()`);
+        await queryRunner.query(`DROP TABLE "car_listings"`);
+        await queryRunner.query(`DROP TYPE "public"."car_listings_status_enum"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_1d215ade387a08e1d6d4ffe15d"`);
+        await queryRunner.query(`DROP TABLE "car_listing_images"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_e2ba47d52054e3f1714ce1d822"`);
+        await queryRunner.query(`DROP TABLE "car_listing_features"`);
+        await queryRunner.query(`DROP TABLE "available_features"`);
+        await queryRunner.query(`DROP TABLE "car_general_details"`);
+        await queryRunner.query(`DROP TABLE "car_additional_details"`);
+        await queryRunner.query(`DROP TABLE "registration_cities"`);
+        await queryRunner.query(`DROP TABLE "car_makes"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_5f78622238b307ad0acfcaefc2"`);
+        await queryRunner.query(`DROP TABLE "car_models"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_c2d439621e2f204677ea9dcbb6"`);
+        await queryRunner.query(`DROP TABLE "car_years"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_e5c0e044635843a4e9f64237f1"`);
+        await queryRunner.query(`DROP TABLE "car_variants"`);
+        await queryRunner.query(`DROP TABLE "showroom_details"`);
+    }
+
+}
