@@ -1,6 +1,6 @@
-// src/inspection-requests/dto/create-inspection-request.dto.ts
 import { IsUUID, IsNotEmpty, IsString, IsOptional, IsEnum, IsNumber, IsDateString } from 'class-validator';
 import { InspectionRequestStatus, PaymentStatus } from '../entity/inspection-request.entity';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateInspectionRequestDto {
   @IsUUID()
@@ -44,8 +44,7 @@ export class CreateInspectionRequestDto {
   userNotes?: string;
 }
 
-// src/inspection-requests/dto/update-inspection-request.dto.ts
-import { PartialType } from '@nestjs/mapped-types';
+
 
 export class UpdateInspectionRequestDto extends PartialType(CreateInspectionRequestDto) {
   @IsEnum(InspectionRequestStatus)

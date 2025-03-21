@@ -19,7 +19,6 @@ export class FeaturesService {
    */
   async addFeature(createFeatureDto: CreateFeatureDto): Promise<Features> {
     try {
-      // Check if feature already exists by name
       const existingFeature = await this.FeaturesRepository.findOne({
         where: { name: createFeatureDto.name },
       });
@@ -28,7 +27,6 @@ export class FeaturesService {
         throw new ConflictException(`Feature with name "${createFeatureDto.name}" already exists`);
       }
 
-      // Create new feature
       const newFeature = this.FeaturesRepository.create(createFeatureDto);
       return await this.FeaturesRepository.save(newFeature);
     } catch (error) {
@@ -49,10 +47,8 @@ export class FeaturesService {
       const results: Features[] = [];
       const skippedFeatures: string[] = [];
 
-      // Process each feature 
       for (const featureDto of createFeatureDtos) {
         try {
-          // Check if feature already exists
           const existingFeature = await this.FeaturesRepository.findOne({
             where: { name: featureDto.name },
           });
@@ -62,17 +58,14 @@ export class FeaturesService {
             continue;
           }
 
-          // Create and save the feature
           const newFeature = this.FeaturesRepository.create(featureDto);
           const savedFeature = await this.FeaturesRepository.save(newFeature);
           results.push(savedFeature);
         } catch (error) {
-          // Log error but continue with next feature
           console.error(`Error adding feature "${featureDto.name}": ${error.message}`);
         }
       }
 
-      // If no features were added, throw an error
       if (results.length === 0 && createFeatureDtos.length > 0) {
         throw new ConflictException(
           `Failed to add any features. Skipped features: ${skippedFeatures.join(', ')}`,
@@ -133,7 +126,6 @@ export class FeaturesService {
   ): Promise<Features> {
     const feature = await this.getFeatureById(id);
     
-    // Check name uniqueness if name is being updated
     if (updateData.name && updateData.name !== feature.name) {
       const existingFeature = await this.FeaturesRepository.findOne({
         where: { name: updateData.name },
@@ -144,7 +136,6 @@ export class FeaturesService {
       }
     }
 
-    // Update and save
     Object.assign(feature, updateData);
     return await this.FeaturesRepository.save(feature);
   }

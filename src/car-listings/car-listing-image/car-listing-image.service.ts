@@ -1,4 +1,3 @@
-// src/car-listing/services/car-listing-image.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,7 +21,6 @@ export class CarListingImageService {
    * @returns The created car listing image
    */
   async createImage(listingId: string, imageUrl: string): Promise<CarListingImage> {
-    // Check if the listing exists
     const listing = await this.carListingRepository.findOne({
       where: { id: listingId },
     });
@@ -31,7 +29,6 @@ export class CarListingImageService {
       throw new NotFoundException(`Car listing with ID ${listingId} not found`);
     }
 
-    // Create and save the new image
     const newImage = this.carListingImageRepository.create({
       image_url: imageUrl,
       listing: listing,
@@ -46,7 +43,6 @@ export class CarListingImageService {
    * @returns Array of car listing images
    */
   async getImagesByListingId(listingId: string): Promise<CarListingImage[]> {
-    // Check if the listing exists
     const listing = await this.carListingRepository.findOne({
       where: { id: listingId },
     });
@@ -55,7 +51,6 @@ export class CarListingImageService {
       throw new NotFoundException(`Car listing with ID ${listingId} not found`);
     }
 
-    // Get all images for the listing
     return this.carListingImageRepository.find({
       where: { listing: { id: listingId } },
       order: { created_at: 'ASC' },
@@ -86,7 +81,6 @@ export class CarListingImageService {
    * @returns Array of created car listing images
    */
   async createMultipleImages(listingId: string, imageUrls: string[]): Promise<CarListingImage[]> {
-    // Check if the listing exists
     const listing = await this.carListingRepository.findOne({
       where: { id: listingId },
     });
@@ -95,7 +89,6 @@ export class CarListingImageService {
       throw new NotFoundException(`Car listing with ID ${listingId} not found`);
     }
 
-    // Create image entities
     const imageEntities = imageUrls.map(url => 
       this.carListingImageRepository.create({
         image_url: url,
@@ -103,7 +96,6 @@ export class CarListingImageService {
       })
     );
 
-    // Save all images at once
     return this.carListingImageRepository.save(imageEntities);
   }
 
@@ -113,7 +105,6 @@ export class CarListingImageService {
    * @returns void
    */
   async deleteAllListingImages(listingId: string): Promise<void> {
-    // Check if the listing exists
     const listing = await this.carListingRepository.findOne({
       where: { id: listingId },
     });
@@ -122,12 +113,10 @@ export class CarListingImageService {
       throw new NotFoundException(`Car listing with ID ${listingId} not found`);
     }
 
-    // Find all images for the listing
     const images = await this.carListingImageRepository.find({
       where: { listing: { id: listingId } },
     });
 
-    // Remove all images
     await this.carListingImageRepository.remove(images);
   }
 }

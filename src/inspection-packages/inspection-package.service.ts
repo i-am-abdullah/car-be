@@ -41,7 +41,6 @@ export class InspectionPackageService {
   async update(id: string, updateDto: UpdateInspectionPackageDto): Promise<InspectionPackage> {
     const inspectionPackage = await this.findOne(id);
     
-    // Merge the existing entity with the update DTO
     const updatedInspectionPackage = this.inspectionPackageRepository.merge(
       inspectionPackage,
       updateDto,

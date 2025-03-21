@@ -1,4 +1,3 @@
-// src/car-listing/car-listing.controller.ts
 import {
     Controller,
     Get,
@@ -25,7 +24,6 @@ import {
   export class CarListingController {
     constructor(private readonly carListingService: CarListingService) {}
   
-    // Create a new car listing
     @Post()
     @UseGuards(AuthGuard)
     async create(
@@ -38,7 +36,6 @@ import {
       return this.carListingService.create(createCarListingDto);
     }
   
-    // Get all car listings with pagination (default page 1, limit 10)
     @Get()
     async findAll(
       @Query('page') page: number = 1,
@@ -47,14 +44,11 @@ import {
       return this.carListingService.findAll(page, limit);
     }
   
-    // Get a specific car listing by ID
     @Get(':id')
     async findOne(@Param('id', ParseUUIDPipe) id: string) {
       return this.carListingService.findOne(id);
     }
-  
-    // Update a car listing
-    
+      
     @Patch(':id')
     @UseGuards(AuthGuard)
     async update(
@@ -68,7 +62,6 @@ import {
       return this.carListingService.update(id, updateCarListingDto);
     }
   
-    // Delete a car listing (returns no content)
     @Delete(':id')
     // @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -76,7 +69,6 @@ import {
       await this.carListingService.remove(id);
     }
   
-    // Update the status of a car listing
     @Patch(':id/status')
     // @UseGuards(AuthGuard)
     async updateStatus(
@@ -87,7 +79,6 @@ import {
       return this.carListingService.updateStatus(id, status);
     }
   
-    // Get car listings by user ID with pagination
     @Get('user/:userId')
     async findByUserId(
       @Param('userId', ParseUUIDPipe) userId: string,
@@ -97,7 +88,6 @@ import {
       return this.carListingService.findByUserId(userId, page, limit);
     }
   
-    // Get car listings by status with pagination
     @Get('status/:status')
     async findByStatus(
       @Param('status') status: 'draft' | 'pending' | 'active' | 'sold' | 'inactive' | 'rejected',
@@ -107,7 +97,6 @@ import {
       return this.carListingService.findByStatus(status, page, limit);
     }
   
-    // Mark a car listing as featured
     @Patch(':id/feature')
     // @UseGuards(AuthGuard)
     async markAsFeatured(
@@ -117,7 +106,6 @@ import {
       return this.carListingService.markAsFeatured(id, featuredUntil);
     }
   
-    // Search car listings by various criteria with pagination
     @Post('search')
     async search(
       @Body(ValidationPipe) searchParams: SearchCarListingDto,

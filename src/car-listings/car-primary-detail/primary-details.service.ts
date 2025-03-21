@@ -1,4 +1,3 @@
-// src/car/services/primary-details.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,7 +22,6 @@ export class PrimaryDetailsService {
     private carVariantRepository: Repository<CarVariant>,
   ) {}
 
-  // CarMake Methods
   async getAllCarMakes(): Promise<CarMake[]> {
     return this.carMakeRepository.find();
   }
@@ -40,7 +38,6 @@ export class PrimaryDetailsService {
     return make;
   }
 
-  // CarModel Methods
   async getAllCarModels(): Promise<CarModel[]> {
     return this.carModelRepository.find({
       relations: ['make'],
@@ -48,7 +45,6 @@ export class PrimaryDetailsService {
   }
 
   async getCarModelsByMakeId(makeId: string): Promise<CarModel[]> {
-    // First verify the make exists
     await this.getCarMakeById(makeId);
     
     return this.carModelRepository.find({
@@ -70,7 +66,6 @@ export class PrimaryDetailsService {
     return model;
   }
 
-  // CarYear Methods
   async getAllCarYears(): Promise<CarYear[]> {
     return this.carYearRepository.find({
       relations: ['make', 'model'],
@@ -78,7 +73,6 @@ export class PrimaryDetailsService {
   }
 
   async getCarYearsByMakeAndModelIds(makeId: string, modelId: string): Promise<CarYear[]> {
-    // First verify the model exists and belongs to the make
     const model = await this.carModelRepository.findOne({
       where: { id: modelId, make: { id: makeId } },
       relations: ['make'],
@@ -110,7 +104,6 @@ export class PrimaryDetailsService {
     return year;
   }
 
-  // CarVariant Methods
   async getAllCarVariants(): Promise<CarVariant[]> {
     return this.carVariantRepository.find({
       relations: ['make', 'model', 'year'],
@@ -122,7 +115,6 @@ export class PrimaryDetailsService {
     modelId: string, 
     yearId: string
   ): Promise<CarVariant[]> {
-    // First verify the year exists and belongs to the model and make
     const year = await this.carYearRepository.findOne({
       where: { 
         id: yearId,
@@ -159,7 +151,6 @@ export class PrimaryDetailsService {
     return variant;
   }
 
-  // Creation methods for each entity
   async createCarMake(makeData: Partial<CarMake>): Promise<CarMake> {
     const newMake = this.carMakeRepository.create(makeData);
     return this.carMakeRepository.save(newMake);
@@ -186,7 +177,6 @@ export class PrimaryDetailsService {
     makeId: string;
     modelId: string;
   }): Promise<CarYear> {
-    // Verify relation integrity
     const model = await this.carModelRepository.findOne({
       where: { id: yearData.modelId, make: { id: yearData.makeId } },
       relations: ['make'],
@@ -212,7 +202,6 @@ export class PrimaryDetailsService {
     modelId: string;
     yearId: string;
   }): Promise<CarVariant> {
-    // Verify relation integrity
     const year = await this.carYearRepository.findOne({
       where: { 
         id: variantData.yearId,

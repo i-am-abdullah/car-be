@@ -1,4 +1,3 @@
-// src/inspection-requests/inspection-request.controller.ts
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { InspectionRequestService } from './inspection-request.service';
 import { CreateInspectionRequestDto } from './dto/inspection-request.dto';

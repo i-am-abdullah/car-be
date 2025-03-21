@@ -1,4 +1,3 @@
-// src/user/entities/user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { CarListing } from 'src/car-listings/car-listing.entity';
 import { InspectionRequest } from 'src/inspection-request/entity/inspection-request.entity';
@@ -44,7 +43,6 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @OneToMany(() => CarListing, carListing => carListing.user)
   listings: CarListing[];
 

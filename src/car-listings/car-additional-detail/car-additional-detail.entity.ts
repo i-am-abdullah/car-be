@@ -1,4 +1,3 @@
-// src/car-listing/entities/car-additional-detail.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { CarListing } from '../car-listing.entity';
 
@@ -28,7 +27,6 @@ export class CarAdditionalDetail {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @OneToOne(() => CarListing, listing => listing.additionalDetail, { nullable: false })
   @JoinColumn({ name: 'listing_id' })
   listing: CarListing;

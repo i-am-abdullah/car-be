@@ -1,4 +1,3 @@
-// src/inspection-requests/inspection-request.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,7 +24,6 @@ export class InspectionRequestService {
   async create(createInspectionRequestDto: CreateInspectionRequestDto): Promise<InspectionRequest> {
     const { listing_id, user_id, package_id, requestedDate, scheduledDate, ...restData } = createInspectionRequestDto;
 
-    // Find related entities
     const listing = await this.carListingRepository.findOne({ where: { id: listing_id } });
     if (!listing) {
       throw new NotFoundException(`Car listing with ID ${listing_id} not found`);
@@ -89,7 +87,6 @@ export class InspectionRequestService {
       ...restData 
     } = updateInspectionRequestDto;
 
-    // Update relations if provided
     if (listing_id) {
       const listing = await this.carListingRepository.findOne({ where: { id: listing_id } });
       if (!listing) {
@@ -114,7 +111,6 @@ export class InspectionRequestService {
       inspectionRequest.package = inspectionPackage;
     }
 
-    // Update date fields if provided
     if (requestedDate) {
       inspectionRequest.requestedDate = new Date(requestedDate);
     }
@@ -131,7 +127,6 @@ export class InspectionRequestService {
       inspectionRequest.fullPaymentDate = new Date(fullPaymentDate);
     }
 
-    // Update remaining fields
     if (restData.location !== undefined) {
       inspectionRequest.location = restData.location;
     }

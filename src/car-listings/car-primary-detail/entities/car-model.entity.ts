@@ -1,4 +1,3 @@
-// src/car/entities/car-model.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany,Index, JoinColumn } from 'typeorm';
 import { CarMake } from './car-make.entity';
 import { CarYear } from './car-year.entity';
@@ -22,7 +21,6 @@ export class CarModel {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @ManyToOne(() => CarMake, make => make.models, { nullable: false })
   @JoinColumn({ name: 'make_id' })
   make: CarMake;

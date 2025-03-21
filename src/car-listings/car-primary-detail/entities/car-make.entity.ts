@@ -21,7 +21,6 @@ export class CarMake {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @OneToMany(() => CarModel, model => model.make)
   models: CarModel[];
 

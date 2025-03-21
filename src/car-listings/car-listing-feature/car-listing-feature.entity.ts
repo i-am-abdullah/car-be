@@ -1,4 +1,3 @@
-// src/car-listing/entities/car-listing-feature.entity.ts
 import { Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn} from 'typeorm';
 import { CarListing } from '../car-listing.entity';
 import { Features } from '../features/feature.entity';
@@ -11,7 +10,6 @@ export class CarListingFeature {
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  // Relations
   @ManyToOne(() => CarListing, listing => listing.features, { nullable: false })
   @JoinColumn({ name: 'listing_id' })
   listing: CarListing;

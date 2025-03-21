@@ -95,7 +95,7 @@ import {
 
     async validateToken(accessToken: string): Promise<{ valid: boolean; payload?: any }> {
       try {
-        const payload = this.jwtService.verify(accessToken); // Verify token using JWT secret
+        const payload = this.jwtService.verify(accessToken); 
         return { valid: true, payload };
       } catch (error) {
         return { valid: false };

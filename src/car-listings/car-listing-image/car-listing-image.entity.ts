@@ -1,4 +1,3 @@
-// src/car-listing/entities/car-listing-image.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { CarListing } from '../car-listing.entity';
 
@@ -16,7 +15,6 @@ export class CarListingImage {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @ManyToOne(() => CarListing, listing => listing.images, { nullable: false })
   @JoinColumn({ name: 'listing_id' })
   listing: CarListing;

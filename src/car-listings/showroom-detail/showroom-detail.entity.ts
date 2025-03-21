@@ -1,4 +1,3 @@
-// src/car/entities/showroom-detail.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { CarMake } from '../car-primary-detail/entities/car-make.entity';
 import { CarModel } from '../car-primary-detail/entities/car-model.entity';
@@ -52,7 +51,6 @@ export class ShowroomDetail {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @ManyToOne(() => CarModel, model => model, { nullable: false })
   @JoinColumn({ name: 'model_id' })
   model: CarModel;

@@ -1,4 +1,3 @@
-// src/inspection-requests/entities/inspection-request.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { CarListing } from 'src/car-listings/car-listing.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -81,7 +80,6 @@ export class InspectionRequest {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // Relations
   @ManyToOne(() => CarListing, carListing => carListing.inspectionRequests)
   @JoinColumn({ name: 'listing_id' })
   listing: CarListing;

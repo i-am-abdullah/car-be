@@ -1,4 +1,3 @@
-// src/feature/feature.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Features } from './feature.entity';

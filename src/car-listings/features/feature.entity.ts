@@ -1,4 +1,3 @@
-// src/feature/entities/available-feature.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { CarListingFeature } from '../car-listing-feature/car-listing-feature.entity';
 @Entity('features')
@@ -18,7 +17,6 @@ export class Features {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @OneToMany(() => CarListingFeature, carListingFeature => carListingFeature.feature)
   listingFeatures: CarListingFeature[];
 }

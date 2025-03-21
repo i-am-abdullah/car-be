@@ -1,4 +1,3 @@
-// src/car/controllers/primary-details.controller.ts
 import { Controller, Get, Post, Body, Param, ParseUUIDPipe } from '@nestjs/common';
 import { PrimaryDetailsService } from './primary-details.service';
 import { CarMake } from './entities/car-make.entity';
@@ -6,7 +5,6 @@ import { CarModel } from './entities/car-model.entity';
 import { CarYear } from './entities/car-year.entity';
 import { CarVariant } from './entities/car-variant.entity';
 
-// DTOs for data validation
 class CreateCarMakeDto {
   name: string;
   image_url?: string;
@@ -36,7 +34,6 @@ class CreateCarVariantDto {
 export class PrimaryDetailsController {
   constructor(private readonly primaryDetailsService: PrimaryDetailsService) {}
 
-  // CarMake endpoints
   @Get('make')
   async getAllCarMakes(): Promise<CarMake[]> {
     return this.primaryDetailsService.getAllCarMakes();
@@ -52,7 +49,6 @@ export class PrimaryDetailsController {
     return this.primaryDetailsService.createCarMake(createCarMakeDto);
   }
 
-  // CarModel endpoints
   @Get('model')
   async getAllCarModels(): Promise<CarModel[]> {
     return this.primaryDetailsService.getAllCarModels();
@@ -75,7 +71,6 @@ export class PrimaryDetailsController {
     return this.primaryDetailsService.createCarModel(createCarModelDto);
   }
 
-  // CarYear endpoints
   @Get('year')
   async getAllCarYears(): Promise<CarYear[]> {
     return this.primaryDetailsService.getAllCarYears();
@@ -99,7 +94,6 @@ export class PrimaryDetailsController {
     return this.primaryDetailsService.createCarYear(createCarYearDto);
   }
 
-  // CarVariant endpoints
   @Get('variant')
   async getAllCarVariants(): Promise<CarVariant[]> {
     return this.primaryDetailsService.getAllCarVariants();

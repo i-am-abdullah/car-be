@@ -1,4 +1,3 @@
-// src/car-listing/entities/car-listing.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, OneToOne, JoinColumn} from 'typeorm';
 import { CarMake } from './car-primary-detail/entities/car-make.entity';
 import { CarModel } from './car-primary-detail/entities/car-model.entity';
@@ -44,7 +43,6 @@ export class CarListing {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @ManyToOne(() => User, user => user.listings, { nullable: true })
   @JoinColumn({ name: 'user_id' })
   user: User;

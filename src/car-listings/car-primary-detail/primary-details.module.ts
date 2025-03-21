@@ -1,4 +1,3 @@
-// src/car/car-primary-details.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PrimaryDetailsService } from './primary-details.service';

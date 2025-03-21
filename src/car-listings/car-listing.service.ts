@@ -35,7 +35,6 @@ export class CarListingService {
    */
   async create(createCarListingDto: CreateCarListingDto): Promise<CarListing> {
     try {
-      // Extract nested data
       const { 
         additionalDetail, 
         generalDetail, 
@@ -60,7 +59,6 @@ export class CarListingService {
       }
       
 
-      // Create the main car listing
       const newListing:CarListing = this.carListingRepository.create({...listingData,
         variant:CarVariant,
         make:CarMake,
@@ -72,7 +70,6 @@ export class CarListingService {
 
       const savedListing = await this.carListingRepository.save(newListing);
       
-      // Create additional detail if provided
       if (additionalDetail) {
         await this.carAdditionalDetailService.create({
           ...additionalDetail,
@@ -80,7 +77,6 @@ export class CarListingService {
         });
       }
 
-      // Create general detail if provided
       if (generalDetail) {
         await this.carGeneralDetailService.create({
           ...generalDetail,
@@ -88,7 +84,6 @@ export class CarListingService {
         });
       }
 
-      // Add features if provided
       if (features && features.length > 0) {
         await this.carListingFeatureService.addMultipleFeaturesToListing(
           savedListing.id,
@@ -96,7 +91,6 @@ export class CarListingService {
         );
       }
 
-      // Add images if provided
       if (images && images.length > 0) {
         await this.carListingImageService.createMultipleImages(
           savedListing.id,
@@ -104,7 +98,6 @@ export class CarListingService {
         );
       }
 
-      // Return the complete car listing with all relations
       return this.findOne(savedListing.id);
     } catch (error) {
       throw new BadRequestException(`Failed to create car listing: ${error.message}`);
@@ -203,11 +196,9 @@ export class CarListingService {
       existingListing.registrationCity = carRegistrationCity
 
 
-      // Update the main car listing
       Object.assign(existingListing, listingData);
       await this.carListingRepository.save(existingListing);
 
-      // Update additional detail if provided
       if (additionalDetail) {
         try {
           await this.carAdditionalDetailService.updateByListingId(id, additionalDetail);
@@ -223,7 +214,6 @@ export class CarListingService {
         }
       }
 
-      // Update general detail if provided
       if (generalDetail) {
         try {
           await this.carGeneralDetailService.updateByListingId(id, generalDetail);
@@ -239,7 +229,6 @@ export class CarListingService {
         }
       }
 
-      // Update features if provided
       if (features) {
         await this.carListingFeatureService.deleteAllListingFeatures(id);
         
@@ -248,7 +237,6 @@ export class CarListingService {
         }
       }
 
-      // Update images if provided
       if (images) {
         await this.carListingImageService.deleteAllListingImages(id);
         
@@ -257,7 +245,6 @@ export class CarListingService {
         }
       }
 
-      // Return the updated car listing with all relations
       return this.findOne(id);
     } catch (error) {
       throw new BadRequestException(`Failed to update car listing: ${error.message}`);
@@ -272,7 +259,6 @@ export class CarListingService {
   async remove(id: string): Promise<void> {
     const listing = await this.findOne(id);
 
-    // Remove related entities first
     try {
       await this.carListingFeatureService.deleteAllListingFeatures(id);
     } catch (error) {
@@ -297,7 +283,6 @@ export class CarListingService {
       console.warn(`Failed to delete general detail: ${error.message}`);
     }
 
-    // Remove the main listing
     await this.carListingRepository.remove(listing);
   }
 
@@ -425,12 +410,10 @@ export class CarListingService {
       queryBuilder.andWhere('listing.status = :status', { status });
     }
     
-    // Show only active listings by default if no status is specified
     if (!status) {
       queryBuilder.andWhere('listing.status = :defaultStatus', { defaultStatus: 'active' });
     }
     
-    // Add featured listings first
     queryBuilder.orderBy('CASE WHEN listing.featured_until > NOW() THEN 0 ELSE 1 END', 'ASC')
       .addOrderBy('listing.created_at', 'DESC');
     

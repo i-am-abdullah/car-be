@@ -1,4 +1,3 @@
-// src/location/entities/registration-city.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { CarListing } from '../car-listing.entity';
 
@@ -16,7 +15,6 @@ export class RegistrationCity {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Relations
   @OneToMany(() => CarListing, carListing => carListing.registrationCity)
   carListings: CarListing[];
 }
