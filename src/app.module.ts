@@ -13,6 +13,7 @@ import { CarListingModule } from './car-listings/car-listing.module';
 import { RegistrationCityModule } from './car-listings/registration-city/registration-city.module';
 import { InspectionPackageModule } from './inspection-packages/inspection-package.module';
 import { InspectionRequestModule } from './inspection-request/inspection-request.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { InspectionRequestModule } from './inspection-request/inspection-request
     CarListingModule,
     RegistrationCityModule,
     InspectionPackageModule,
-    InspectionRequestModule
+    InspectionRequestModule,
+    ChatModule
   ],
   controllers: [AppController],
   providers: [AppService],

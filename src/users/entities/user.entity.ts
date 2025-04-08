@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { CarListing } from 'src/car-listings/car-listing.entity';
 import { InspectionRequest } from 'src/inspection-request/entity/inspection-request.entity';
+import { Conversation } from 'src/chat/entities/conversation.entity';
+import { Message } from 'src/chat/entities/message.entity';
 
 @Entity('users')
 export class User {
@@ -48,6 +50,14 @@ export class User {
 
   @OneToMany(() => InspectionRequest, inspectionRequest => inspectionRequest.user)
   inspectionRequests: InspectionRequest[];
-  
 
+  @OneToMany(() => Conversation, conversation => conversation.buyer)
+  buyer: Conversation[];
+
+
+  @OneToMany(() => Conversation, conversation => conversation.seller)
+  seller: Conversation[];
+
+  @OneToMany(() => Message, message =>  message.sender)
+  sender: Message[];
 }

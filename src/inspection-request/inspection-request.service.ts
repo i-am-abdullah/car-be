@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InspectionRequest } from './entity/inspection-request.entity';
@@ -21,8 +21,8 @@ export class InspectionRequestService {
     private inspectionPackageRepository: Repository<InspectionPackage>,
   ) {}
 
-  async create(createInspectionRequestDto: CreateInspectionRequestDto): Promise<InspectionRequest> {
-    const { listing_id, user_id, package_id, requestedDate, scheduledDate, ...restData } = createInspectionRequestDto;
+  async create(createInspectionRequestDto: CreateInspectionRequestDto, user_id): Promise<InspectionRequest> {
+    const { listing_id, package_id, requestedDate, scheduledDate, ...restData } = createInspectionRequestDto;
 
     const listing = await this.carListingRepository.findOne({ where: { id: listing_id } });
     if (!listing) {
@@ -73,12 +73,11 @@ export class InspectionRequestService {
     return inspectionRequest;
   }
 
-  async update(id: string, updateInspectionRequestDto: UpdateInspectionRequestDto): Promise<InspectionRequest> {
+  async update(id: string, updateInspectionRequestDto: UpdateInspectionRequestDto, user_id): Promise<InspectionRequest> {
     const inspectionRequest = await this.findOne(id);
     
     const { 
       listing_id, 
-      user_id, 
       package_id, 
       requestedDate, 
       scheduledDate, 

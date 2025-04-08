@@ -10,6 +10,7 @@ import { CarGeneralDetail } from './car-general-detail/car-general-detail.entity
 import { CarListingFeature } from './car-listing-feature/car-listing-feature.entity';
 import { CarListingImage } from './car-listing-image/car-listing-image.entity';
 import { InspectionRequest } from 'src/inspection-request/entity/inspection-request.entity';
+import { Conversation } from 'src/chat/entities/conversation.entity';
 
 @Entity('car_listings')
 export class CarListing {
@@ -83,5 +84,8 @@ export class CarListing {
 
   @OneToMany(() => InspectionRequest, inspecitonRequest => inspecitonRequest.listing)
   inspectionRequests: InspectionRequest[];
+
+  @OneToMany(() => Conversation, conversation => conversation.listing)
+  conversation: InspectionRequest[];
 
 }

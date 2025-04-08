@@ -75,10 +75,6 @@ export class CreateCarListingDto {
   featured_until?: Date;
 
   @IsUUID()
-  @IsOptional()
-  user_id?: string;
-
-  @IsUUID()
   variant_id: string;
 
   @IsUUID()

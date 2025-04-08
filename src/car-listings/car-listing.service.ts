@@ -33,7 +33,7 @@ export class CarListingService {
    * @param createCarListingDto - The data to create a car listing
    * @returns The created car listing with all related entities
    */
-  async create(createCarListingDto: CreateCarListingDto): Promise<CarListing> {
+  async create(createCarListingDto: CreateCarListingDto, user_id:string): Promise<CarListing> {
     try {
       const { 
         additionalDetail, 
@@ -45,7 +45,6 @@ export class CarListingService {
         model_id,
         year_id,
         registration_city_id,
-        user_id,
         ...listingData 
       } = createCarListingDto;
       const CarVariant = await this.primaryDetailService.getCarVariantById(variant_id);
@@ -162,7 +161,7 @@ export class CarListingService {
    * @param updateCarListingDto - The data to update the car listing
    * @returns The updated car listing with all relations
    */
-  async update(id: string, updateCarListingDto: UpdateCarListingDto): Promise<CarListing> {
+  async update(id: string, updateCarListingDto: UpdateCarListingDto, user_id:string): Promise<CarListing> {
     try {
       const existingListing = await this.findOne(id);
 
@@ -176,7 +175,6 @@ export class CarListingService {
         model_id,
         year_id,
         registration_city_id,
-        user_id,
         ...listingData 
       } = updateCarListingDto;
       

@@ -40,13 +40,9 @@ export class InspectionPackageService {
 
   async update(id: string, updateDto: UpdateInspectionPackageDto): Promise<InspectionPackage> {
     const inspectionPackage = await this.findOne(id);
+    Object.assign(inspectionPackage,updateDto)
     
-    const updatedInspectionPackage = this.inspectionPackageRepository.merge(
-      inspectionPackage,
-      updateDto,
-    );
-    
-    return this.inspectionPackageRepository.save(updatedInspectionPackage);
+    return this.inspectionPackageRepository.save(inspectionPackage);
   }
 
   async remove(id: string): Promise<void> {

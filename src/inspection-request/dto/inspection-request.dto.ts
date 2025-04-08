@@ -9,10 +9,6 @@ export class CreateInspectionRequestDto {
 
   @IsUUID()
   @IsNotEmpty()
-  user_id: string;
-
-  @IsUUID()
-  @IsNotEmpty()
   package_id: string;
 
   @IsDateString()

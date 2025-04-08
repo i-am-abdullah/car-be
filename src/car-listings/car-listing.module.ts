@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarListingService } from './car-listing.service';
-import { CarListingController } from './car-listing.controller';
+import { PublicCarListingController } from './public.car-listing.controller';
 import { CarListing } from './car-listing.entity';
 import { CarAdditionalDetail } from './car-additional-detail/car-additional-detail.entity';
 import { CarGeneralDetail } from './car-general-detail/car-general-detail.entity';
@@ -23,6 +23,8 @@ import { PrimaryDetailsService } from './car-primary-detail/primary-details.serv
 import { RegistrationCityService } from './registration-city/registration-city.service';
 import { UsersService } from 'src/users/user.service';
 import { User } from 'src/users/entities/user.entity';
+import { UserCarListingController } from './user.car-listing.controller';
+import { AdminCarListingController } from './admin.car-listing.controller';
 
 @Module({
   imports: [
@@ -43,7 +45,7 @@ import { User } from 'src/users/entities/user.entity';
     JwtModule,
     forwardRef(() => UsersModule)
   ],
-  controllers: [CarListingController],
+  controllers: [PublicCarListingController, UserCarListingController, AdminCarListingController],
   providers: [
     CarListingService,
     CarAdditionalDetailService,
